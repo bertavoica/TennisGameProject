@@ -10,6 +10,7 @@ pygame.init()
 
 GO_TO_GAME = False
 text = ""
+RUNNING = True
 
 
 def start_the_game():
@@ -18,10 +19,16 @@ def start_the_game():
     GO_TO_GAME = True
 
 
+# close tehe game
+def quit_the_game():
+    global RUNNING
+    print('quit game')
+    sys.exit()
+
+
 def menu_game(screen):
-    global GO_TO_GAME
+    global GO_TO_GAME, RUNNING
     fps_cap = 30
-    RUNNING = True
     clock = pygame.time.Clock()
     pygame.display.set_caption('PyGame Tennis Game!')
     background = pygame.image.load(
@@ -40,7 +47,7 @@ def menu_game(screen):
         fontSize=30, margin=20,
         inactiveColour=(255, 0, 0),
         pressedColour=(0, 255, 0), radius=10,
-        onClick=lambda: print('Click')
+        onClick=quit_the_game
     )
 
     while RUNNING:
@@ -70,6 +77,7 @@ def menu_game(screen):
             print('go')
             GO_TO_GAME = False
             return SECOND_SCENE
+
         pygame.display.update()
 
 
