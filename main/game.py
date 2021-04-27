@@ -5,14 +5,12 @@ from constants import *
 
 def start_game(screen):
     fps_cap = 30
-    # items = ['choose a player', 'choose a pallete', 'choose a team']
     clock = pygame.time.Clock()
     pygame.display.set_caption('Start game!')
     events = pygame.event.get()
     game_background = pygame.image.load(
         r'C:\Users\berta\PycharmProjects\pythonProject\TennisGameProject\main\tennis_court.png').convert()
 
-    # changing size of image because
     picture = pygame.transform.scale(game_background, (720, 720))
 
     while True:
@@ -28,7 +26,4 @@ def start_game(screen):
                 elif event.key == pygame.K_b:
                     return SECOND_SCENE
 
-        # print('Choose:', *items)
-
-        # screen.fill((0, 0, 255))
         pygame.display.update()
