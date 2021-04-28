@@ -1,34 +1,70 @@
 # second window
-import pygame, random, sys, pygame_menu, pybutton
+import pygame
 from constants import *
 
 
 def start_game(screen):
-    fps_cap = 30
-    # items = ['choose a player', 'choose a pallete', 'choose a team']
-    clock = pygame.time.Clock()
-    pygame.display.set_caption('Start game!')
-    events = pygame.event.get()
-    game_background = pygame.image.load(
-        r'C:\Users\berta\PycharmProjects\pythonProject\TennisGameProject\main\tennis_court.png').convert()
+    pygame.display.set_caption("Start game!")
 
-    # changing size of image because
-    picture = pygame.transform.scale(game_background, (720, 720))
+    line1 = pygame.Rect(100, 50, 5, 400)
+    line2 = pygame.Rect(400, 50, 5, 400)
+    line3 = pygame.Rect(100, 50, 300, 5)
+    line4 = pygame.Rect(100, 450, 305, 5)
+    line5 = pygame.Rect(150, 50, 5, 400)
+    line6 = pygame.Rect(350, 50, 5, 400)
+    line7 = pygame.Rect(150, 160, 200, 5)
+    fillet = pygame.Rect(150, 225, 205, 5)
+    line8 = pygame.Rect(150, 290, 200, 5)
+    line9 = pygame.Rect(250, 160, 5, 130)
 
-    while True:
-        clock.tick(fps_cap)
-        screen.fill(WHITE)
-        screen.blit(picture, (0, 0, WIDTH, HEIGHT))
-        for event in events:
+    # matrix dimensions that shows the positions for a point in our plan
+    point_x = 0
+    point_y = 0.1
+
+    width = 800
+    height = 800
+
+    velocity = 5
+
+    # object coordinates
+    object_coordinate_x = 10
+    object_coordinate_y = 10
+
+    # object dimenstions
+    object_dimension_x = 15
+    object_dimension_y = 15
+
+    pygame.draw.rect(screen, (0, 255, 0), (point_x, point_y, width, height))
+
+    run = True
+    while run:
+        pygame.time.delay(100)
+        for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                quit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:
-                    return FIRST_SCENE
-                elif event.key == pygame.K_b:
-                    return SECOND_SCENE
+                run = False
+        keys = pygame.key.get_pressed()
 
-        # print('Choose:', *items)
+        if keys[pygame.K_LEFT]:
+            object_coordinate_x -= velocity
+        if keys[pygame.K_UP]:
+            object_coordinate_y -= velocity
+        if keys[pygame.K_DOWN]:
+            object_coordinate_y += velocity
+        if keys[pygame.K_RIGHT]:
+            object_coordinate_x += velocity
 
-        # screen.fill((0, 0, 255))
+        screen.fill((0, 255, 0))
+        pygame.draw.rect(screen, (255, 255, 255), line1)
+        pygame.draw.rect(screen, (255, 255, 255), line2)
+        pygame.draw.rect(screen, (255, 255, 255), line3)
+        pygame.draw.rect(screen, (255, 255, 255), line4)
+        pygame.draw.rect(screen, (255, 255, 255), line5)
+        pygame.draw.rect(screen, (255, 255, 255), line6)
+        pygame.draw.rect(screen, (255, 255, 255), line7)
+        pygame.draw.rect(screen, (255, 255, 255), line8)
+        pygame.draw.rect(screen, (255, 255, 255), line9)
+        pygame.draw.rect(screen, BLACK, fillet)
+        pygame.draw.rect(screen, (255, 0, 0),(object_coordinate_x, object_coordinate_y, object_dimension_x, object_dimension_y))
+
         pygame.display.update()
+pygame.quit()
