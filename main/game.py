@@ -35,22 +35,23 @@ def start_game(screen):
     object_dimension_y = 15
 
     pygame.draw.rect(screen, (0, 255, 0), (point_x, point_y, width, height))
-
+    #background = pygame.image.load(r'C:\Users\Mircea\PycharmProjects\TennisGameProject\main\abc.png')
     run = True
     while run:
         pygame.time.delay(100)
+     #   screen.blit(background,(0,0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] and object_coordinate_x > velocity:
             object_coordinate_x -= velocity
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_UP] and object_coordinate_y > velocity:
             object_coordinate_y -= velocity
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] and object_coordinate_y < 700 - velocity - object_dimension_y:
             object_coordinate_y += velocity
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] and object_coordinate_x < 700 - velocity - object_dimension_x:
             object_coordinate_x += velocity
 
         screen.fill((0, 255, 0))
