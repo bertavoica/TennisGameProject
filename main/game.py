@@ -1,11 +1,11 @@
 # second window
 import pygame
+#from menu import *
 from constants import *
-
-
+right=False
+left=False
 def start_game(screen):
-    pygame.display.set_caption("Start game!")
-
+    pygame.display.set_caption("Joc de tenis")
     line1 = pygame.Rect(100, 50, 5, 400)
     line2 = pygame.Rect(400, 50, 5, 400)
     line3 = pygame.Rect(100, 50, 300, 5)
@@ -16,14 +16,17 @@ def start_game(screen):
     fillet = pygame.Rect(150, 225, 205, 5)
     line8 = pygame.Rect(150, 290, 200, 5)
     line9 = pygame.Rect(250, 160, 5, 130)
-
+    imagine = pygame.image.load("poza_proba1.png")
+    bot_inamic=pygame.image.load("bot2.png")
     # matrix dimensions that shows the positions for a point in our plan
     point_x = 0
     point_y = 0.1
-
+    bx=50
+    by=50
     width = 800
     height = 800
-
+    x=100
+    y=100
     velocity = 5
 
     # object coordinates
@@ -46,15 +49,32 @@ def start_game(screen):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_LEFT] and object_coordinate_x > velocity:
-            object_coordinate_x -= velocity
+            x -= velocity
+            left = True
+            if left == True and keys[pygame.K_SPACE]:
+                imagine = pygame.image.load("primire serva stanga.png")
+                screen.blit(imagine, (x, y))
+            else:
+                imagine = pygame.image.load("poza_proba1.PNG")
+                screen.blit(imagine, (x, y))
         if keys[pygame.K_UP] and object_coordinate_y > velocity:
-            object_coordinate_y -= velocity
-        if keys[pygame.K_DOWN] and object_coordinate_y < 700 - velocity - object_dimension_y:
-            object_coordinate_y += velocity
-        if keys[pygame.K_RIGHT] and object_coordinate_x < 700 - velocity - object_dimension_x:
-            object_coordinate_x += velocity
+            y -= velocity
 
+        if keys[pygame.K_DOWN] :
+            y += velocity
+        if keys[pygame.K_RIGHT] :
+            x += velocity
         screen.fill((0, 255, 0))
+
+        if bx<400:
+            bx+=velocity*2
+        while bx>400:
+
+            t=10
+            while t>0:
+                t-=1
+                bx -= velocity * 2
+
         pygame.draw.rect(screen, (255, 255, 255), line1)
         pygame.draw.rect(screen, (255, 255, 255), line2)
         pygame.draw.rect(screen, (255, 255, 255), line3)
@@ -65,7 +85,8 @@ def start_game(screen):
         pygame.draw.rect(screen, (255, 255, 255), line8)
         pygame.draw.rect(screen, (255, 255, 255), line9)
         pygame.draw.rect(screen, BLACK, fillet)
-        pygame.draw.rect(screen, (255, 0, 0),(object_coordinate_x, object_coordinate_y, object_dimension_x, object_dimension_y))
-
+        #pygame.draw.rect(screen, (255, 0, 0),(object_coordinate_x, object_coordinate_y, object_dimension_x, object_dimension_y))
+        screen.blit(imagine, (x, y))
+        screen.blit(bot_inamic,(bx,by))
         pygame.display.update()
 pygame.quit()
