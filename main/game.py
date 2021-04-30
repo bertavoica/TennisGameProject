@@ -51,12 +51,12 @@ def start_game(screen):
         if keys[pygame.K_LEFT] and object_coordinate_x > velocity:
             x -= velocity
             left = True
-            if left == True and keys[pygame.K_SPACE]:
-                imagine = pygame.image.load("primire serva stanga.png")
-                screen.blit(imagine, (x, y))
+            if left==True and keys[pygame.K_SPACE]:
+                imagine=pygame.image.load("lovitura_st.PNG")
+                screen.blit(imagine,(x,y))
             else:
-                imagine = pygame.image.load("poza_proba1.PNG")
-                screen.blit(imagine, (x, y))
+                imagine=pygame.image.load("poza_proba1.PNG")
+                screen.blit(imagine,(x,y))
         if keys[pygame.K_UP] and object_coordinate_y > velocity:
             y -= velocity
 
@@ -64,16 +64,20 @@ def start_game(screen):
             y += velocity
         if keys[pygame.K_RIGHT] :
             x += velocity
+            right = True
+            if right == True and keys[pygame.K_SPACE]:
+                imagine = pygame.image.load("poza_lovit_dr.PNG")
+                screen.blit(imagine, (x, y))
+                right = False
+            else:
+                imagine = pygame.image.load("poza_proba1.PNG")
+                screen.blit(imagine, (x, y))
+                right = False
         screen.fill((0, 255, 0))
 
-        if bx<400:
-            bx+=velocity*2
-        while bx>400:
+        if bx<150:
+            bx+=velocity
 
-            t=10
-            while t>0:
-                t-=1
-                bx -= velocity * 2
 
         pygame.draw.rect(screen, (255, 255, 255), line1)
         pygame.draw.rect(screen, (255, 255, 255), line2)
