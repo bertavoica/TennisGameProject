@@ -1,29 +1,96 @@
 # second window
-import pygame, random, sys, pygame_menu, pybutton
+import pygame
 from constants import *
 
+right = False
+left = False
 
-def start_game(screen):
-    fps_cap = 30
-    clock = pygame.time.Clock()
-    pygame.display.set_caption('Start game!')
-    events = pygame.event.get()
-    game_background = pygame.image.load(
-        r'C:\Users\berta\PycharmProjects\pythonProject\TennisGameProject\main\tennis_court.png').convert()
 
-    picture = pygame.transform.scale(game_background, (720, 720))
+class Game:
+    def __init__(self, screen):
+        self.line = []
+        self.screen = screen
+        self.fillet = pygame.Rect(150, 225, 205, 5)
+        # object coordinates
+        self.object_coordinate_x = 100
+        self.object_coordinate_y = 100
 
-    while True:
-        clock.tick(fps_cap)
-        screen.fill(WHITE)
-        screen.blit(picture, (0, 0, WIDTH, HEIGHT))
-        for event in events:
-            if event.type == pygame.QUIT:
-                quit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:
-                    return FIRST_SCENE
-                elif event.key == pygame.K_b:
-                    return SECOND_SCENE
+        # object dimensions
+        self.object_dimension_x = 15
+        self.object_dimension_y = 15
 
+        self.bx = 0
+        self.by = -110
+        self.x = 150
+        self.y = 300
+
+        self.player_profile = pygame.image.load("player_profile.PNG")
+        self.bot = pygame.image.load("bot2.png")
+
+    def start_game(self):
+        pygame.display.set_caption("Start game!")
+        pygame.draw.rect(self.screen, (0, 255, 0), (POINT_X, POINT_Y, WIDTH_GAME, HEIGHT_GAME))
+
+    def run(self):
+        RUN = True
+        while RUN:
+            pygame.time.delay(100)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    RUN = False
+            keys = pygame.key.get_pressed()
+
+            if keys[pygame.K_LEFT] and self.object_coordinate_x > VELOCITY:
+                self.x -= VELOCITY
+                if keys[pygame.K_SPACE]:
+                    self.player_profile = pygame.image.load("player_left.PNG")
+                    self.screen.blit(self.player_profile, (self.x, self.y))
+                else:
+                    self.player_profile = pygame.image.load("player_profile.PNG")
+                    self.screen.blit(self.player_profile, (self.x, self.y))
+
+            if keys[pygame.K_UP] and self.object_coordinate_y > VELOCITY:
+                self.y -= VELOCITY
+
+            if keys[pygame.K_DOWN]:
+                self.y += VELOCITY
+            if keys[pygame.K_RIGHT]:
+                self.x += VELOCITY
+                if keys[pygame.K_SPACE]:
+                    self.player_profile = pygame.image.load("player_right.PNG")
+                    self.screen.blit(self.player_profile, (self.x, self.y))
+                else:
+                    self.player_profile = pygame.image.load("player_profile.PNG")
+                    self.screen.blit(self.player_profile, (self.x, self.y))
+            self.screen.fill((0, 255, 0))
+            self.draw()
+
+    def draw(self):
+        self.line.append(pygame.Rect(100, 50, 5, 400))
+        self.line.append(pygame.Rect(400, 50, 5, 400))
+        self.line.append(pygame.Rect(100, 50, 300, 5))
+        self.line.append(pygame.Rect(100, 450, 305, 5))
+        self.line.append(pygame.Rect(150, 50, 5, 400))
+        self.line.append(pygame.Rect(350, 50, 5, 400))
+        self.line.append(pygame.Rect(150, 160, 200, 5))
+        self.line.append(pygame.Rect(150, 290, 200, 5))
+        self.line.append(pygame.Rect(250, 160, 5, 130))
+        pygame.draw.rect(self.screen, (255, 255, 255), self.line[0])
+        pygame.draw.rect(self.screen, (255, 255, 255), self.line[1])
+        pygame.draw.rect(self.screen, (255, 255, 255), self.line[2])
+        pygame.draw.rect(self.screen, (255, 255, 255), self.line[3])
+        pygame.draw.rect(self.screen, (255, 255, 255), self.line[4])
+        pygame.draw.rect(self.screen, (255, 255, 255), self.line[5])
+        pygame.draw.rect(self.screen, (255, 255, 255), self.line[6])
+        pygame.draw.rect(self.screen, (255, 255, 255), self.line[7])
+        pygame.draw.rect(self.screen, (255, 255, 255), self.line[8])
+        pygame.draw.rect(self.screen, BLACK, self.fillet)
+        pygame.draw.rect(self.screen, (255, 0, 0),
+                         (self.object_coordinate_x, self.object_coordinate_y, self.object_dimension_x,
+                          self.object_dimension_y))
+        self.screen.blit(self.player_profile, (self.x, self.y))
+        self.screen.blit(self.bot, (self.bx, self.by))
         pygame.display.update()
+
+
+pygame.quit()
