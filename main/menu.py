@@ -1,19 +1,14 @@
 # start menu window
 import pygame as py
-from game import *
+from game import Game
 import sys
 import pygame_widgets as pw
+from constants import *
 
-pygame.init()
+py.init()
 
 GO_TO_GAME = False
 RUNNING = True
-
-
-def start_the_game():
-    global GO_TO_GAME
-    print('clicked')
-    GO_TO_GAME = True
 
 
 def quit_the_game():
@@ -22,108 +17,104 @@ def quit_the_game():
     sys.exit()
 
 
-def menu_game(screen):
-    global GO_TO_GAME, RUNNING
-    text = ''
-    fps_cap = 30
-    clock = pygame.time.Clock()
+def start_the_game():
+    global GO_TO_GAME
+    print('clicked')
+    GO_TO_GAME = True
 
-    # window title
-    pygame.display.set_caption('PyGame Tennis Game!')
 
-    # background image
-    background = pygame.image.load(r'C:\Users\Mircea\PycharmProjects\TennisGameProject\main\background.png')
+class Menu:
 
-    # input username
-    input_box = py.Rect(10, 30, 100, 100)
-    active = False
-    font = py.font.Font(None, 32)
-    color_inactive = WHITE
-    color_active = RED
-    color = color_inactive
+    def __init__(self, screen):
+        self.screen = screen
+        self.font = py.font.Font(None, 32)
+        self.text = ''
+        self.font_title = pygame.font.SysFont(None, 65)
+        self.txt_surface = self.font.render(self.text, True, BLACK)
+        self.width = max(200, self.txt_surface.get_width() + 10)
+        self.font_intro = pygame.font.SysFont(None, 30)
+        self.text_intro = self.font_intro.render("Enter your name:", True, BLACK)
+        self.text_title = self.font_title.render("Tennis Game!", True, BLACK)
+        self.clock = pygame.time.Clock()
+        self.background = pygame.image.load(
+            r'C:\Users\berta\PycharmProjects\pythonProject\TennisGameProjectSecondTry\main\background.png')
+        self.fps_cap = 30
+        self.input_box = py.Rect(10, 30, 100, 100)
+        self.color_inactive = WHITE
+        self.color_active = RED
+        self.color = self.color_inactive
+        self.user_list = []
+        self.button_1 = pw.Button(
+            self.screen, WIDTH_MENU / 2 - 270, 500, 100, 100, text='Start',
+            fontSize=30, margin=20,
+            inactiveColour=(255, 0, 0),
+            pressedColour=(0, 255, 0), radius=10,
+            onClick=start_the_game
+        )
+        self.button_2 = pw.Button(
+            self.screen, WIDTH_MENU / 2 + 270, 500, 100, 100, text='Quit!',
+            fontSize=30, margin=20,
+            inactiveColour=(255, 0, 0),
+            pressedColour=(0, 255, 0), radius=10,
+            onClick=quit_the_game
+        )
 
-    # screen title
-    font_title = pygame.font.SysFont(None, 65)
-    text_title = font_title.render("Tennis Game!", True, BLACK)
+    def start_menu(self):
+        pygame.display.set_caption('PyGame Tennis Game!')
+        py.draw.rect(self.screen, self.color, self.input_box, 2)
 
-    # text input intro
-    font_intro = pygame.font.SysFont(None, 30)
-    text_intro = font_intro.render("Enter your name:", True, BLACK)
+    def run_menu(self):
+        global RUNNING, GO_TO_GAME
+        active = False
 
-    # define a list what lately will append the username
-    user_list = []
+        while RUNNING:
+            events = pygame.event.get()
+            self.clock.tick(self.fps_cap)
+            self.screen.fill(WHITE)
+            self.screen.blit(self.background, (0, 0))
 
-    button_1 = pw.Button(
-        screen, WIDTH / 2 - 270, 500, 100, 100, text='Start',
-        fontSize=30, margin=20,
-        inactiveColour=(255, 0, 0),
-        pressedColour=(0, 255, 0), radius=10,
-        onClick=start_the_game
-    )
-
-    button_2 = pw.Button(
-        screen, WIDTH / 2 + 270, 500, 100, 100, text='Quit!',
-        fontSize=30, margin=20,
-        inactiveColour=(255, 0, 0),
-        pressedColour=(0, 255, 0), radius=10,
-        onClick=quit_the_game
-    )
-
-    while RUNNING:
-        events = pygame.event.get()
-        clock.tick(fps_cap)
-        screen.fill(WHITE)
-        screen.blit(background, (0, 0))
-
-        for event in events:
-            if event.type == pygame.QUIT:
-                RUNNING = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if input_box.collidepoint(event.pos):
-                    active = not active
-                else:
-                    active = False
-                color = color_active if active else color_inactive
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    return FIRST_SCENE
-                elif event.key == button_1.function():
-                    return SECOND_SCENE
-                if active:
-                    if event.key == py.K_RETURN:
-                        print(text)
-                        text = ''
-                    elif event.key == py.K_BACKSPACE:
-                        text = text[:-1]
+            for event in events:
+                if event.type == pygame.QUIT:
+                    RUNNING = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.input_box.collidepoint(event.pos):
+                        active = not active
                     else:
-                        text += event.unicode
+                        active = False
+                    self.color = self.color_active if active else self.color_inactive
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        return FIRST_SCENE
+                    elif event.key == self.button_1.function():
+                        return SECOND_SCENE
+                    if active:
+                        if event.key == py.K_RETURN:
+                            print(self.text)
+                            self.text = ''
+                        elif event.key == py.K_BACKSPACE:
+                            self.text = self.text[:-1]
+                        else:
+                            self.text += event.unicode
 
-        button_1.listen(events)
-        button_1.draw()
+                self.button_1.listen(events)
+                self.button_2.listen(events)
 
-        button_2.listen(events)
-        button_2.draw()
+            if GO_TO_GAME:
+                print('go')
+                GO_TO_GAME = False
+                return SECOND_SCENE
 
-        # positioning texts
-        screen.blit(text_title, text_title.get_rect(center=screen.get_rect().center))
+            self.draw()
 
-        screen.blit(text_intro, text_intro.get_rect(center=(100, 20)))
-
-        # resize box if the text is too big or long
-        txt_surface = font.render(text, True, BLACK)
-        width = max(200, txt_surface.get_width() + 10)
-        input_box.w = width
-        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
-        py.draw.rect(screen, color, input_box, 2)
-
-        # saving username
-        user_list.append(text)
-        user_set = set(user_list)
-
-        if GO_TO_GAME:
-            print('go')
-            GO_TO_GAME = False
-            return SECOND_SCENE
+    def draw(self):
+        global GO_TO_GAME
+        self.input_box.w = self.width
+        self.button_1.draw()
+        self.button_2.draw()
+        self.text = ''
+        self.screen.blit(self.text_title, self.text_title.get_rect(center=self.screen.get_rect().center))
+        self.screen.blit(self.text_intro, self.text_intro.get_rect(center=(100, 20)))
+        self.screen.blit(self.txt_surface, (self.input_box.x + 5, self.input_box.y + 5))
 
         pygame.display.update()
 
@@ -132,14 +123,20 @@ def menu_game(screen):
 
 
 def main():
+    pygame.init()
     screen = pygame.display.set_mode(RESOLUTION)
 
     scene = FIRST_SCENE
+    game_object = Game(screen)
+    menu_object = Menu(screen)
     while True:
         if scene == FIRST_SCENE:
-            scene = menu_game(screen)
+            menu_object.start_menu()
+            scene = menu_object.run_menu()
         elif scene == SECOND_SCENE:
-            scene = start_game(screen)
+            print("ccc")
+            game_object.start_game()
+            game_object.run()
 
 
 main()
