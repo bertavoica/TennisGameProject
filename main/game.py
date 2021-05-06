@@ -1,6 +1,7 @@
 # second window
 import pygame
 from constants import *
+from components import *
 
 right = False
 left = False
@@ -33,6 +34,7 @@ class Game:
 
     def run(self):
         RUN = True
+        ball_object = Ball(WIDTH_GAME/2, HEIGHT_GAME/2, VELOCITY, VELOCITY, WIDTH_GAME/2, HEIGHT_GAME/2, self.screen)
         while RUN:
             pygame.time.delay(100)
             for event in pygame.event.get():
@@ -42,6 +44,7 @@ class Game:
 
             if keys[pygame.K_LEFT] and self.object_coordinate_x > VELOCITY:
                 self.x -= VELOCITY
+                self.bx = ball_object.position_x
                 if keys[pygame.K_SPACE]:
                     self.player_profile = pygame.image.load("player_left.PNG")
                     self.screen.blit(self.player_profile, (self.x, self.y))
@@ -51,11 +54,13 @@ class Game:
 
             if keys[pygame.K_UP] and self.object_coordinate_y > VELOCITY:
                 self.y -= VELOCITY
-
+                self.by += ball_object.position_y
             if keys[pygame.K_DOWN]:
                 self.y += VELOCITY
+                self.by -= ball_object.position_y
             if keys[pygame.K_RIGHT]:
                 self.x += VELOCITY
+                self.bx -= ball_object.position_x
                 if keys[pygame.K_SPACE]:
                     self.player_profile = pygame.image.load("player_right.PNG")
                     self.screen.blit(self.player_profile, (self.x, self.y))

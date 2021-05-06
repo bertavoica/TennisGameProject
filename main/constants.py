@@ -21,3 +21,5 @@ POINT_Y = 0.1
 x = 300
 y = 300
 VELOCITY = 5
+
+BALL_RADIUS = 0.5
