@@ -4,14 +4,14 @@ import pygame
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
-
+GREEN = (0, 255, 0)
 # define the screen
 RESOLUTION = (700, 700)
 WIDTH_MENU = 600
 HEIGHT_MENU = 600
 WIDTH_GAME = 800
 HEIGHT_GAME = 800
-
+BALL_RADIUS = 20
 # define scenes
 FIRST_SCENE = 0
 SECOND_SCENE = 1
