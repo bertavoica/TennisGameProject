@@ -1,5 +1,7 @@
 # second window
 import pygame
+
+from TennisGameProject.main.components import Ball
 from constants import *
 
 right = False
@@ -19,6 +21,8 @@ class Game:
         self.object_dimension_x = 15
         self.object_dimension_y = 15
 
+        self.playerScore = 0
+        self.botScore = 0
         self.bx = 0
         self.by = -110
         self.x = 150
@@ -26,7 +30,8 @@ class Game:
 
         self.player_profile = pygame.image.load("player_profile.PNG")
         self.bot = pygame.image.load("bot2.png")
-
+        game = Game(screen)
+        self.ball = Ball(self, game, [WIDTH_GAME / 2, HEIGHT_GAME / 2], [BALL_RADIUS, BALL_RADIUS], [0, 0], screen)
     def start_game(self):
         pygame.display.set_caption("Start game!")
         pygame.draw.rect(self.screen, (0, 255, 0), (POINT_X, POINT_Y, WIDTH_GAME, HEIGHT_GAME))
