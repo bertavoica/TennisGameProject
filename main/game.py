@@ -12,17 +12,18 @@ class Game:
 
     # game = Game(screen)
     # self.ball = Ball(self, [WIDTH_GAME / 2, HEIGHT_GAME / 2], [BALL_RADIUS, BALL_RADIUS], [0, 0], screen)
+
     def __init__(self, screen):
         self.line = []
         self.screen = screen
         self.fillet = pygame.Rect(150, 225, 205, 5)
         # object coordinates
-        self.object_coordinate_x = 100
-        self.object_coordinate_y = 100
+        # self.object_coordinate_x = 100
+        # self.object_coordinate_y = 100
 
         # object dimensions
-        self.object_dimension_x = 15
-        self.object_dimension_y = 15
+        # self.object_dimension_x = 60
+        # self.object_dimension_y = 15
 
         self.playerScore = 0
         self.botScore = 0
@@ -41,6 +42,7 @@ class Game:
             self.velocity = [random.randrange(-1, 1), random.randrange(-1, 1)]
         self.player_profile = pygame.image.load("player_profile.PNG")
         self.bot = pygame.image.load("bot2.png")
+        self.ball = pygame.image.load("ball.png")
 
     def start_game(self):
         pygame.display.set_caption("Start game!")
@@ -49,6 +51,7 @@ class Game:
     def update(self):
         self.position_x = int(self.position_x)
         self.position_y = int(self.position_y)
+        self.velocity = [0, 0]
 
         if self.position_x - self.dimension_x < -10:
             self.velocity[0] *= -1
@@ -71,6 +74,7 @@ class Game:
         #  PLAYER
         self.collision_detection()
 
+
     def collision_detection(self):
         if self.collision_of_ball():
             self.on_collision()
@@ -80,14 +84,14 @@ class Game:
 
     def collision_of_ball(self):
         # for player
-        if self.position_x - (self.dimension_x + 10) / 2 < self.object_coordinate_x + (
-                self.object_dimension_x + 10) / 2 and \
-                self.position_x + (self.dimension_x + 10) / 2 > self.object_coordinate_x - (
-                self.object_dimension_x + 10) / 2 and \
-                self.position_y - self.dimension_y / 2 < self.object_coordinate_y + \
-                self.object_dimension_y / 2 and \
-                self.position_y + self.dimension_y / 2 > self.object_coordinate_y - \
-                self.object_dimension_y / 2:
+        if self.position_x - (self.dimension_x + 10) / 2 < self.position_x + (
+                self.dimension_x + 10) / 2 and \
+                self.position_x + (self.dimension_x + 10) / 2 > self.position_x - (
+                self.dimension_x + 10) / 2 and \
+                self.position_y - self.dimension_y / 2 < self.position_y + \
+                self.position_y / 2 and \
+                self.position_y + self.dimension_y / 2 > self.position_y - \
+                self.dimension_y / 2:
             self.velocity[0] *= -1
         # TODO FOR BOT
 
@@ -99,17 +103,20 @@ class Game:
                 if event.type == pygame.QUIT:
                     RUN = False
             keys = pygame.key.get_pressed()
-
-            if keys[pygame.K_LEFT] and self.object_coordinate_x > VELOCITY:
+            self.screen.blit(self.ball, (self.position_x, self.position_y))
+            if keys[pygame.K_LEFT] and self.position_x > VELOCITY:
                 self.x -= VELOCITY
+                self.velocity[0] = -4
                 if keys[pygame.K_SPACE]:
+                    self.position_x -= 5
+                    self.position_y -= 5
                     self.player_profile = pygame.image.load("player_left.PNG")
                     self.screen.blit(self.player_profile, (self.x, self.y))
                 else:
                     self.player_profile = pygame.image.load("player_profile.PNG")
                     self.screen.blit(self.player_profile, (self.x, self.y))
 
-            if keys[pygame.K_UP] and self.object_coordinate_y > VELOCITY:
+            if keys[pygame.K_UP] and self.position_y > VELOCITY:
                 self.y -= VELOCITY
 
             if keys[pygame.K_DOWN]:
@@ -146,12 +153,13 @@ class Game:
         pygame.draw.rect(self.screen, (255, 255, 255), self.line[7])
         pygame.draw.rect(self.screen, (255, 255, 255), self.line[8])
         pygame.draw.rect(self.screen, BLACK, self.fillet)
-        pygame.draw.rect(self.screen, (255, 0, 0),
-                         (self.object_coordinate_x, self.object_coordinate_y, self.object_dimension_x,
-                          self.object_dimension_y))
+        # pygame.draw.rect(self.screen, (255, 0, 0),
+        #                  (self.object_coordinate_x, self.object_coordinate_y, self.object_dimension_x,
+                          # self.object_dimension_y))
         self.screen.blit(self.player_profile, (self.x, self.y))
         self.screen.blit(self.bot, (self.bx, self.by))
-        pygame.draw.circle(self.screen, RED, (self.position_x, self.position_y), BALL_RADIUS)
+        self.screen.blit(self.ball, (self.position_x, self.position_y))
+        # pygame.draw.circle(self.screen, WHITE, (self.position_x, self.position_y), BALL_RADIUS)
         pygame.display.update()
 
 
