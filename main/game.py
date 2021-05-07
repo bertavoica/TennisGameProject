@@ -1,15 +1,17 @@
 # second window
 import pygame
-
-from TennisGameProject.main.components import Ball
+import random
 from constants import *
-from components import *
+from main.players import Player
 
 right = False
 left = False
 
 
 class Game:
+
+    # game = Game(screen)
+    # self.ball = Ball(self, [WIDTH_GAME / 2, HEIGHT_GAME / 2], [BALL_RADIUS, BALL_RADIUS], [0, 0], screen)
     def __init__(self, screen):
         self.line = []
         self.screen = screen
@@ -29,17 +31,68 @@ class Game:
         self.x = 150
         self.y = 300
 
+        self.position_x = WIDTH_GAME / 2
+        self.position_y = HEIGHT_GAME / 2
+        self.dimension_x = 2
+        self.dimension_y = 2
+        self.velocity = [0, 0]
+        while self.velocity[0] == 0 or self.velocity[1] == 0:
+            # print("aaaa")
+            self.velocity = [random.randrange(-1, 1), random.randrange(-1, 1)]
         self.player_profile = pygame.image.load("player_profile.PNG")
         self.bot = pygame.image.load("bot2.png")
-        game = Game(screen)
-        self.ball = Ball(self, game, [WIDTH_GAME / 2, HEIGHT_GAME / 2], [BALL_RADIUS, BALL_RADIUS], [0, 0], screen)
+
     def start_game(self):
         pygame.display.set_caption("Start game!")
         pygame.draw.rect(self.screen, (0, 255, 0), (POINT_X, POINT_Y, WIDTH_GAME, HEIGHT_GAME))
 
+    def update(self):
+        self.position_x = int(self.position_x)
+        self.position_y = int(self.position_y)
+
+        if self.position_x - self.dimension_x < -10:
+            self.velocity[0] *= -1
+        if self.position_x + self.dimension_x > WIDTH_GAME + 10:
+            self.velocity[0] *= -1
+
+        # could be simplified by telling that if the ball is not hit on the other half of the field, it's a point for
+        # the opponent
+        if self.position_y - self.dimension_y < -10:
+            # self.game.ball = Ball(self.game, [WIDTH_GAME // 2, HEIGHT_GAME // 2], [BALL_RADIUS, BALL_RADIUS])
+            self.position_x = WIDTH_GAME / 2
+            self.position_y = HEIGHT_GAME / 2
+            self.playerScore += 1
+        if self.position_x + self.dimension_x > HEIGHT_GAME + 10:
+            # self.game.ball = Ball(self.game, [WIDTH_GAME // 2, HEIGHT_GAME // 2], [BALL_RADIUS, BALL_RADIUS])
+            self.position_x = WIDTH_GAME / 2
+            self.position_y = HEIGHT_GAME / 2
+            self.botScore += 1
+        # TODO, WHEN THE BALL TOUCHES THE FIELD OF THE PLAYER THAT HIT IT IN THAT MOMENT. IT IS A POINT FOR THE OTHER
+        #  PLAYER
+        self.collision_detection()
+
+    def collision_detection(self):
+        if self.collision_of_ball():
+            self.on_collision()
+
+    def on_collision(self):
+        self.velocity[0] *= -1.4
+
+    def collision_of_ball(self):
+        # for player
+        if self.position_x - (self.dimension_x + 10) / 2 < self.object_coordinate_x + (
+                self.object_dimension_x + 10) / 2 and \
+                self.position_x + (self.dimension_x + 10) / 2 > self.object_coordinate_x - (
+                self.object_dimension_x + 10) / 2 and \
+                self.position_y - self.dimension_y / 2 < self.object_coordinate_y + \
+                self.object_dimension_y / 2 and \
+                self.position_y + self.dimension_y / 2 > self.object_coordinate_y - \
+                self.object_dimension_y / 2:
+            self.velocity[0] *= -1
+        # TODO FOR BOT
+
     def run(self):
         RUN = True
-        ball_object = Ball(WIDTH_GAME/2, HEIGHT_GAME/2, VELOCITY, VELOCITY, WIDTH_GAME/2, HEIGHT_GAME/2, self.screen)
         while RUN:
             pygame.time.delay(100)
             for event in pygame.event.get():
@@ -49,7 +102,6 @@ class Game:
 
             if keys[pygame.K_LEFT] and self.object_coordinate_x > VELOCITY:
                 self.x -= VELOCITY
-                self.bx = ball_object.position_x
                 if keys[pygame.K_SPACE]:
                     self.player_profile = pygame.image.load("player_left.PNG")
                     self.screen.blit(self.player_profile, (self.x, self.y))
@@ -59,13 +111,11 @@ class Game:
 
             if keys[pygame.K_UP] and self.object_coordinate_y > VELOCITY:
                 self.y -= VELOCITY
-                self.by += ball_object.position_y
+
             if keys[pygame.K_DOWN]:
                 self.y += VELOCITY
-                self.by -= ball_object.position_y
             if keys[pygame.K_RIGHT]:
                 self.x += VELOCITY
-                self.bx -= ball_object.position_x
                 if keys[pygame.K_SPACE]:
                     self.player_profile = pygame.image.load("player_right.PNG")
                     self.screen.blit(self.player_profile, (self.x, self.y))
@@ -73,6 +123,7 @@ class Game:
                     self.player_profile = pygame.image.load("player_profile.PNG")
                     self.screen.blit(self.player_profile, (self.x, self.y))
             self.screen.fill((0, 255, 0))
+            self.update()
             self.draw()
 
     def draw(self):
@@ -100,6 +151,7 @@ class Game:
                           self.object_dimension_y))
         self.screen.blit(self.player_profile, (self.x, self.y))
         self.screen.blit(self.bot, (self.bx, self.by))
+        pygame.draw.circle(self.screen, RED, (self.position_x, self.position_y), BALL_RADIUS)
         pygame.display.update()
 
 
