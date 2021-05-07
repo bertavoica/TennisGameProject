@@ -37,7 +37,7 @@ class Menu:
         self.text_title = self.font_title.render("Tennis Game!", True, BLACK)
         self.clock = pygame.time.Clock()
         self.background = pygame.image.load(
-            r'C:\Users\berta\PycharmProjects\pythonProject\TennisGameProjectSecondTry\main\background.png')
+            r'C:\Users\HP\Desktop\proiect_python\TennisGameProject\main\background.png')
         self.fps_cap = 30
         self.input_box = py.Rect(10, 30, 100, 100)
         self.color_inactive = WHITE

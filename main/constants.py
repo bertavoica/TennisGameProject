@@ -15,7 +15,7 @@ BALL_RADIUS = 3
 # define scenes
 FIRST_SCENE = 0
 SECOND_SCENE = 1
-
+LENGTH = 10
 POINT_X = 0
 POINT_Y = 0.1
 x = 300

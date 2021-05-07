@@ -1,17 +1,14 @@
 # second window
 import pygame
 import random
+import time
 from constants import *
-from main.players import Player
-
+from tqdm import *
 right = False
 left = False
 
 
 class Game:
-
-    # game = Game(screen)
-    # self.ball = Ball(self, [WIDTH_GAME / 2, HEIGHT_GAME / 2], [BALL_RADIUS, BALL_RADIUS], [0, 0], screen)
     def __init__(self, screen):
         self.line = []
         self.screen = screen
@@ -30,12 +27,20 @@ class Game:
         self.by = -110
         self.x = 150
         self.y = 300
+        #loading bar
+
+        self.barPos = (30, 250)
+        self.barSize = (20, 200)
+        self.borderColor = (0, 0, 0)
+        self.barColor = RED
+        self.count = 0
 
         self.position_x = WIDTH_GAME / 2
         self.position_y = HEIGHT_GAME / 2
         self.dimension_x = 2
         self.dimension_y = 2
         self.velocity = [0, 0]
+        self.count = 0
         while self.velocity[0] == 0 or self.velocity[1] == 0:
             # print("aaaa")
             self.velocity = [random.randrange(-1, 1), random.randrange(-1, 1)]
@@ -99,7 +104,11 @@ class Game:
                 if event.type == pygame.QUIT:
                     RUN = False
             keys = pygame.key.get_pressed()
-
+            if keys[pygame.K_SPACE]:
+                self.count += 0.2
+            if self.count > 13.799999999999982:
+                self.count = 13.799999999999983
+                self.count = 13.799999999999983
             if keys[pygame.K_LEFT] and self.object_coordinate_x > VELOCITY:
                 self.x -= VELOCITY
                 if keys[pygame.K_SPACE]:
@@ -126,7 +135,16 @@ class Game:
             self.update()
             self.draw()
 
+    def DrawBar(self, pos, size, borderC, barC, progress):
+
+        pygame.draw.rect(self.screen, borderC, (*pos, *size), 1)
+        innerPos = (pos[0] + 3, pos[1] + 3)
+        innerSize = ((size[0] - 6), (size[0] - 6) * progress)
+        print(progress)
+        pygame.draw.rect(self.screen, barC, (*innerPos, *innerSize))
+
     def draw(self):
+
         self.line.append(pygame.Rect(100, 50, 5, 400))
         self.line.append(pygame.Rect(400, 50, 5, 400))
         self.line.append(pygame.Rect(100, 50, 300, 5))
@@ -149,10 +167,11 @@ class Game:
         pygame.draw.rect(self.screen, (255, 0, 0),
                          (self.object_coordinate_x, self.object_coordinate_y, self.object_dimension_x,
                           self.object_dimension_y))
+        self.DrawBar(self.barPos, self.barSize, self.borderColor, self.barColor, self.count)
         self.screen.blit(self.player_profile, (self.x, self.y))
         self.screen.blit(self.bot, (self.bx, self.by))
         pygame.draw.circle(self.screen, RED, (self.position_x, self.position_y), BALL_RADIUS)
+        pygame.draw.rect(self.screen, (255, 255, 255), pygame.Rect(700, 700, 20, 20))
         pygame.display.update()
-
 
 pygame.quit()
