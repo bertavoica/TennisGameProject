@@ -2,7 +2,6 @@
 import pygame
 import random
 from constants import *
-from main.players import Player
 
 right = False
 left = False
