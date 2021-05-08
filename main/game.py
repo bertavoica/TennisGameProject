@@ -51,51 +51,6 @@ class Game:
         pygame.display.set_caption("Start game!")
         pygame.draw.rect(self.screen, (0, 255, 0), (POINT_X, POINT_Y, WIDTH_GAME, HEIGHT_GAME))
 
-    def update(self):
-        self.position_x = int(self.position_x)
-        self.position_y = int(self.position_y)
-
-        if self.position_x - self.dimension_x < -10:
-            self.velocity[0] *= -1
-        if self.position_x + self.dimension_x > WIDTH_GAME + 10:
-            self.velocity[0] *= -1
-
-        # could be simplified by telling that if the ball is not hit on the other half of the field, it's a point for
-        # the opponent
-        if self.position_y - self.dimension_y < -10:
-            # self.game.ball = Ball(self.game, [WIDTH_GAME // 2, HEIGHT_GAME // 2], [BALL_RADIUS, BALL_RADIUS])
-            self.position_x = WIDTH_GAME / 2
-            self.position_y = HEIGHT_GAME / 2
-            self.playerScore += 1
-        if self.position_x + self.dimension_x > HEIGHT_GAME + 10:
-            # self.game.ball = Ball(self.game, [WIDTH_GAME // 2, HEIGHT_GAME // 2], [BALL_RADIUS, BALL_RADIUS])
-            self.position_x = WIDTH_GAME / 2
-            self.position_y = HEIGHT_GAME / 2
-            self.botScore += 1
-        # TODO, WHEN THE BALL TOUCHES THE FIELD OF THE PLAYER THAT HIT IT IN THAT MOMENT. IT IS A POINT FOR THE OTHER
-        #  PLAYER
-        self.collision_detection()
-
-    def collision_detection(self):
-        if self.collision_of_ball():
-            self.on_collision()
-
-    def on_collision(self):
-        self.velocity[0] *= -1.4
-
-    def collision_of_ball(self):
-        # for player
-        if self.position_x - (self.dimension_x + 10) / 2 < self.object_coordinate_x + (
-                self.object_dimension_x + 10) / 2 and \
-                self.position_x + (self.dimension_x + 10) / 2 > self.object_coordinate_x - (
-                self.object_dimension_x + 10) / 2 and \
-                self.position_y - self.dimension_y / 2 < self.object_coordinate_y + \
-                self.object_dimension_y / 2 and \
-                self.position_y + self.dimension_y / 2 > self.object_coordinate_y - \
-                self.object_dimension_y / 2:
-            self.velocity[0] *= -1
-        # TODO FOR BOT
-
     def run(self):
         RUN = True
         while RUN:
@@ -132,7 +87,6 @@ class Game:
                     self.player_profile = pygame.image.load("player_profile.PNG")
                     self.screen.blit(self.player_profile, (self.x, self.y))
             self.screen.fill((0, 255, 0))
-            self.update()
             self.draw()
 
     def DrawBar(self, pos, size, borderC, barC, progress):
