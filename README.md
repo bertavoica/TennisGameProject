@@ -1,6 +1,6 @@
 # TennisGameProject
 ### Jocul de tenis este format din doua interfete:
-##Prima interfata - Menu:
+## Prima interfata - Menu:
 - 'Start!' button - prin apasarea lui se face trecerea in a doua interfata
 - 'Quit!' button - inchide jocul
 - 'Enter your name :' text box - userul isi va introduce username-ul, urmand a fi introdus intr-o lista menita pentru a tine evidenta scorului
