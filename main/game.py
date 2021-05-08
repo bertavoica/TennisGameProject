@@ -4,6 +4,8 @@ import pygame
 from constants import *
 right=False
 left=False
+
+
 def start_game(screen):
     pygame.display.set_caption("Joc de tenis")
     line1 = pygame.Rect(100, 50, 5, 400)
@@ -21,17 +23,17 @@ def start_game(screen):
     # matrix dimensions that shows the positions for a point in our plan
     point_x = 0
     point_y = 0.1
-    bx=50
-    by=50
+    bx=0
+    by=-110
     width = 800
     height = 800
-    x=100
-    y=100
+    x=150
+    y=300
     velocity = 5
 
     # object coordinates
-    object_coordinate_x = 10
-    object_coordinate_y = 10
+    object_coordinate_x = 100
+    object_coordinate_y = 100
 
     # object dimenstions
     object_dimension_x = 15
@@ -75,8 +77,7 @@ def start_game(screen):
                 right = False
         screen.fill((0, 255, 0))
 
-        if bx<150:
-            bx+=velocity
+
 
 
         pygame.draw.rect(screen, (255, 255, 255), line1)
@@ -89,7 +90,7 @@ def start_game(screen):
         pygame.draw.rect(screen, (255, 255, 255), line8)
         pygame.draw.rect(screen, (255, 255, 255), line9)
         pygame.draw.rect(screen, BLACK, fillet)
-        #pygame.draw.rect(screen, (255, 0, 0),(object_coordinate_x, object_coordinate_y, object_dimension_x, object_dimension_y))
+        pygame.draw.rect(screen, (255, 0, 0),(object_coordinate_x, object_coordinate_y, object_dimension_x, object_dimension_y))
         screen.blit(imagine, (x, y))
         screen.blit(bot_inamic,(bx,by))
         pygame.display.update()

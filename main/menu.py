@@ -32,7 +32,7 @@ def menu_game(screen):
     pygame.display.set_caption('PyGame Tennis Game!')
 
     # background image
-    background = pygame.image.load(r'C:\Users\Mircea\PycharmProjects\TennisGameProject\main\background.png')
+    background = pygame.image.load(r'C:\Users\iusti\PycharmProjects\TennisGameProject\main\background.png')
 
     # input username
     input_box = py.Rect(10, 30, 100, 100)
