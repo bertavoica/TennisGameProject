@@ -5,7 +5,6 @@ from constants import *
 right = False
 left = False
 
-
 class Game:
 
     def __init__(self, screen):
@@ -24,6 +23,13 @@ class Game:
         self.by = -110
         self.x = 150
         self.y = 300
+
+        # loading bar
+        self.barPos = (30, 250)
+        self.barSize = (20, 200)
+        self.borderColor = (0, 0, 0)
+        self.barColor = RED
+        self.count = 0
 
         self.position_x = 0
         self.position_y = 0
@@ -112,6 +118,11 @@ class Game:
                 if event.type == pygame.QUIT:
                     RUN = False
             keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                self.count += 0.2
+            if self.count > 13.799999999999982:
+                self.count = 13.799999999999983
+                self.count = 13.799999999999983
             self.screen.blit(self.ball, (self.position_x, self.position_y))
             if keys[pygame.K_z]:
                 if not self.game_started:
@@ -152,6 +163,14 @@ class Game:
             self.update()
             self.draw()
 
+    def DrawBar(self, pos, size, borderC, barC, progress):
+
+        pygame.draw.rect(self.screen, borderC, (*pos, *size), 1)
+        innerPos = (pos[0] + 3, pos[1] + 3)
+        innerSize = ((size[0] - 6), (size[0] - 6) * progress)
+        print(progress)
+        pygame.draw.rect(self.screen, barC, (*innerPos, *innerSize))
+
     def draw(self):
         self.line.append(pygame.Rect(100, 50, 5, 400))
         self.line.append(pygame.Rect(400, 50, 5, 400))
@@ -172,7 +191,7 @@ class Game:
         pygame.draw.rect(self.screen, (255, 255, 255), self.line[7])
         pygame.draw.rect(self.screen, (255, 255, 255), self.line[8])
         pygame.draw.rect(self.screen, BLACK, self.fillet)
-
+        self.DrawBar(self.barPos, self.barSize, self.borderColor, self.barColor, self.count)
         self.screen.blit(self.player_profile, (self.x, self.y))
         self.screen.blit(self.bot, (self.bx, self.by))
         if self.game_started:
