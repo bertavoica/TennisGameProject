@@ -26,6 +26,9 @@ class Game:
         # self.object_dimension_y = 15
 
         self.game_started = False
+        self.player_strike_left = False
+        self.player_strike_right = False
+        self.ball_speed = 0
 
         self.playerScore = 0
         self.botScore = 0
@@ -36,8 +39,8 @@ class Game:
 
         self.position_x = 0
         self.position_y = 0
-        self.dimension_x = 2
-        self.dimension_y = 2
+        self.dimension_x = 24
+        self.dimension_y = 24
         # self.velocity = [5 + random.randrange(-1, 1), 5 + random.randrange(-1, 1)]
         self.player_profile = pygame.image.load("player_profile.PNG")
         self.bot = pygame.image.load("bot2.png")
@@ -114,15 +117,22 @@ class Game:
 
     def collision_of_ball(self):
         # for player
-        if self.position_x - (self.dimension_x + 10) / 2 < self.x + 175 + (self.x + 175 + 10) / 2 and \
-                self.position_x + (self.dimension_x + 10) / 2 > self.x + 175 - (self.x + 175 + 10) / 2 and \
-                self.position_y - self.dimension_y / 2 < self.y + 147 + (self.y + 147) / 2 and \
-                self.position_y + self.dimension_y / 2 > self.y + 147 - (self.y + 147) / 2:
-            self.velocity[1] *= -1
+        ball_center_x = self.position_x + 12
+        ball_center_y = self.position_y + 12
+        if ball_center_x + 12 > self.x + 175 - 17 and \
+                ball_center_x - 12 < self.x + 175 + 17 and \
+                ball_center_y - 12 < self.y + 147 + 17 and \
+                ball_center_y + 12 > self.y + 147 - 17:
+            if self.player_strike_left:
+                self.velocity = [-2 - random.randrange(0, int(self.ball_speed / 3) + 1), -7 + random.randrange(-1, 1) - self.ball_speed]
+            else:
+                self.velocity = [2 + random.randrange(0, int(self.ball_speed / 3) + 1), -7 + random.randrange(-1, 1) - self.ball_speed]
+            self.ball_speed += 1
         if self.position_x - (self.dimension_x + 10) / 2 < self.bx + 175 + (self.bx + 175 + 10) / 2 and \
                 self.position_x + (self.dimension_x + 10) / 2 > self.bx + 175 - (self.bx + 175 + 10) / 2 and \
                 self.position_y - self.dimension_y / 2 < self.by + 147 + (self.by + 147) / 2 and \
                 self.position_y + self.dimension_y / 2 > self.by + 147 - (self.by + 147) / 2:
+            self.ball_speed += 1
             self.velocity[1] *= -1
 
     def run(self):
@@ -138,12 +148,18 @@ class Game:
             if keys[pygame.K_z]:
                 if not self.game_started:
                     self.velocity = [-2, -7 + random.randrange(-1, 1)]
+                    self.ball_speed = 0
+                self.player_strike_left = True
+                self.player_strike_right = False
                 self.game_started = True
                 self.player_profile = pygame.image.load("player_left.PNG")
                 self.screen.blit(self.player_profile, (self.x, self.y))
             if keys[pygame.K_x]:
                 if not self.game_started:
                     self.velocity = [2, -7 + random.randrange(-1, 1)]
+                    self.ball_speed = 0
+                self.player_strike_left = False
+                self.player_strike_right = True
                 self.game_started = True
                 self.player_profile = pygame.image.load("player_right.PNG")
                 self.screen.blit(self.player_profile, (self.x, self.y))
