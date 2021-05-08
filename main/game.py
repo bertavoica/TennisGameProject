@@ -61,6 +61,7 @@ class Game:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
                 self.count += 0.2
+                print("coment")
             if self.count > 13.799999999999982:
                 self.count = 13.799999999999983
                 self.count = 13.799999999999983
