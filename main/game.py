@@ -1,8 +1,6 @@
-# second window
 import pygame
 import random
 from constants import *
-from main.players import Player
 
 right = False
 left = False
@@ -10,20 +8,10 @@ left = False
 
 class Game:
 
-    # game = Game(screen)
-    # self.ball = Ball(self, [WIDTH_GAME / 2, HEIGHT_GAME / 2], [BALL_RADIUS, BALL_RADIUS], [0, 0], screen)
-
     def __init__(self, screen):
         self.line = []
         self.screen = screen
         self.fillet = pygame.Rect(150, 225, 205, 5)
-        # object coordinates
-        # self.object_coordinate_x = 100
-        # self.object_coordinate_y = 100
-
-        # object dimensions
-        # self.object_dimension_x = 60
-        # self.object_dimension_y = 15
 
         self.game_started = False
         self.player_strike_left = False
@@ -41,7 +29,6 @@ class Game:
         self.position_y = 0
         self.dimension_x = 24
         self.dimension_y = 24
-        # self.velocity = [5 + random.randrange(-1, 1), 5 + random.randrange(-1, 1)]
         self.player_profile = pygame.image.load("player_profile.PNG")
         self.bot = pygame.image.load("bot2.png")
         self.ball = pygame.image.load("ball.png")
@@ -54,27 +41,13 @@ class Game:
         if not self.game_started:
             self.position_x = self.x + 175
             self.position_y = self.y + 147 - 50
-            # print(str(self.position_x))
-            # print(str(self.position_y))
             return
-        # self.position_x = int(self.position_x)
-        # self.position_y = int(self.position_y)
-        # self.velocity = [0, 0]
-        # print(str(self.position_x))
-        # if self.position_x - self.dimension_x < -10:
-        #     self.velocity[0] *= -1
-        # if self.position_x + self.dimension_x > WIDTH_GAME + 10:
-        #     self.velocity[0] *= -1
-
-        # could be simplified by telling that if the ball is not hit on the other half of the field, it's a point for
-        # the opponent
         if self.position_y - self.dimension_y < -10:
             self.game_started = False
             self.bx = 0
             self.by = -110
             self.x = 150
             self.y = 300
-            # self.game.ball = Ball(self.game, [WIDTH_GAME // 2, HEIGHT_GAME // 2], [BALL_RADIUS, BALL_RADIUS])
             self.playerScore += 1
         if self.position_y + self.dimension_y > HEIGHT_GAME:
             self.game_started = False
@@ -82,20 +55,16 @@ class Game:
             self.by = -110
             self.x = 150
             self.y = 300
-            # self.game.ball = Ball(self.game, [WIDTH_GAME // 2, HEIGHT_GAME // 2], [BALL_RADIUS, BALL_RADIUS])
             self.playerScore -= 1
         if self.position_x - self.dimension_x < -10:
-            # self.game.ball = Ball(self.game, [WIDTH_GAME // 2, HEIGHT_GAME // 2], [BALL_RADIUS, BALL_RADIUS])
             self.position_x = WIDTH_GAME / 2
             self.position_y = HEIGHT_GAME / 2
             self.playerScore += 1
         if self.position_x + self.dimension_x > WIDTH_GAME + 10:
-            # self.game.ball = Ball(self.game, [WIDTH_GAME // 2, HEIGHT_GAME // 2], [BALL_RADIUS, BALL_RADIUS])
             self.position_x = WIDTH_GAME / 2
             self.position_y = HEIGHT_GAME / 2
             self.botScore += 1
-        # TODO, WHEN THE BALL TOUCHES THE FIELD OF THE PLAYER THAT HIT IT IN THAT MOMENT. IT IS A POINT FOR THE OTHER
-        #  PLAYER
+
         self.position_x += self.velocity[0]
         self.position_y += self.velocity[1]
         print(str(self.velocity))
@@ -107,31 +76,30 @@ class Game:
 
         self.collision_detection()
 
-
     def collision_detection(self):
         self.collision_of_ball()
-            # self.on_collision()
-
-    # def on_collision(self):
-    #     self.velocity[0] *= -1.4
 
     def collision_of_ball(self):
         # for player
-        ball_center_x = self.position_x + 12
-        ball_center_y = self.position_y + 12
-        if ball_center_x + 12 > self.x + 175 - 17 and \
-                ball_center_x - 12 < self.x + 175 + 17 and \
-                ball_center_y - 12 < self.y + 147 + 17 and \
-                ball_center_y + 12 > self.y + 147 - 17:
+        ball_center_x = self.position_x + HALF_BALL_SPRITE
+        ball_center_y = self.position_y + HALF_BALL_SPRITE
+
+        if ball_center_x + HALF_BALL_SPRITE > self.x + HALF_IMAGE_PLAYER_SPRITE_X - HALF_PLAYER_SPRITE and \
+                ball_center_x - HALF_BALL_SPRITE < self.x + HALF_IMAGE_PLAYER_SPRITE_X + HALF_PLAYER_SPRITE and \
+                ball_center_y - HALF_BALL_SPRITE < self.y + HALF_IMAGE_PLAYER_SPRITE_Y + HALF_PLAYER_SPRITE and \
+                ball_center_y + HALF_BALL_SPRITE > self.y + HALF_IMAGE_PLAYER_SPRITE_Y - HALF_PLAYER_SPRITE:
             if self.player_strike_left:
-                self.velocity = [-2 - random.randrange(0, int(self.ball_speed / 3) + 1), -7 + random.randrange(-1, 1) - self.ball_speed]
+                self.velocity = [-2 - random.randrange(0, int(self.ball_speed / 3) + 1),
+                                 -7 + random.randrange(-1, 1) - self.ball_speed]
             else:
-                self.velocity = [2 + random.randrange(0, int(self.ball_speed / 3) + 1), -7 + random.randrange(-1, 1) - self.ball_speed]
+                self.velocity = [2 + random.randrange(0, int(self.ball_speed / 3) + 1),
+                                 -7 + random.randrange(-1, 1) - self.ball_speed]
             self.ball_speed += 1
-        if self.position_x - (self.dimension_x + 10) / 2 < self.bx + 175 + (self.bx + 175 + 10) / 2 and \
-                self.position_x + (self.dimension_x + 10) / 2 > self.bx + 175 - (self.bx + 175 + 10) / 2 and \
-                self.position_y - self.dimension_y / 2 < self.by + 147 + (self.by + 147) / 2 and \
-                self.position_y + self.dimension_y / 2 > self.by + 147 - (self.by + 147) / 2:
+
+        if ball_center_x + HALF_BALL_SPRITE > self.bx + HALF_IMAGE_BOT_SPRITE_X - HALF_BOT_SPRITE and \
+                ball_center_x - HALF_BALL_SPRITE < self.bx + HALF_IMAGE_BOT_SPRITE_X + HALF_BOT_SPRITE and \
+                ball_center_y - HALF_BALL_SPRITE < self.by + HALF_IMAGE_BOT_SPRITE_Y + HALF_BOT_SPRITE and \
+                ball_center_y + HALF_BALL_SPRITE > self.by + HALF_IMAGE_BOT_SPRITE_Y - HALF_BOT_SPRITE:
             self.ball_speed += 1
             self.velocity[1] *= -1
 
@@ -167,12 +135,6 @@ class Game:
                 self.x -= VELOCITY
                 self.player_profile = pygame.image.load("player_profile.PNG")
                 self.screen.blit(self.player_profile, (self.x, self.y))
-                # if keys[pygame.K_SPACE]:
-                #     self.player_profile = pygame.image.load("player_left.PNG")
-                #     self.screen.blit(self.player_profile, (self.x, self.y))
-                # else:
-                #     self.player_profile = pygame.image.load("player_profile.PNG")
-                #     self.screen.blit(self.player_profile, (self.x, self.y))
 
             if keys[pygame.K_UP] and self.position_y > VELOCITY:
                 self.y -= VELOCITY
@@ -186,12 +148,6 @@ class Game:
                 self.x += VELOCITY
                 self.player_profile = pygame.image.load("player_profile.PNG")
                 self.screen.blit(self.player_profile, (self.x, self.y))
-                # if keys[pygame.K_SPACE]:
-                #     self.player_profile = pygame.image.load("player_right.PNG")
-                #     self.screen.blit(self.player_profile, (self.x, self.y))
-                # else:
-                #     self.player_profile = pygame.image.load("player_profile.PNG")
-                #     self.screen.blit(self.player_profile, (self.x, self.y))
             self.screen.fill((0, 255, 0))
             self.update()
             self.draw()
@@ -216,15 +172,11 @@ class Game:
         pygame.draw.rect(self.screen, (255, 255, 255), self.line[7])
         pygame.draw.rect(self.screen, (255, 255, 255), self.line[8])
         pygame.draw.rect(self.screen, BLACK, self.fillet)
-        # pygame.draw.rect(self.screen, (255, 0, 0),
-        #                  (self.object_coordinate_x, self.object_coordinate_y, self.object_dimension_x,
-        # self.object_dimension_y))
+
         self.screen.blit(self.player_profile, (self.x, self.y))
         self.screen.blit(self.bot, (self.bx, self.by))
         if self.game_started:
-            # self.screen.blit(self.ball, (self.x + 175, self.y + 147))
             self.screen.blit(self.ball, (self.position_x, self.position_y))
-        # pygame.draw.circle(self.screen, WHITE, (self.position_x, self.position_y), BALL_RADIUS)
         pygame.display.update()
 
 
