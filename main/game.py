@@ -95,7 +95,7 @@ class Game:
         self.position_x += self.velocity[0]
         self.position_y += self.velocity[1]
         print(str(self.velocity))
-
+        #bot movement
         if self.position_x > self.bx + 175:
             self.bx += BOT_VELOCITY
         if self.position_x < self.bx + 175:
