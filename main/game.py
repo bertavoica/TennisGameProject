@@ -57,6 +57,7 @@ class Game:
             self.x = 150
             self.y = 300
             self.playerScore += 1
+            self.count = 0
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
         if self.position_y + self.dimension_y > HEIGHT_GAME:
@@ -66,18 +67,21 @@ class Game:
             self.x = 150
             self.y = 300
             self.playerScore -= 1
+            self.count = 0
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
         if self.position_x - self.dimension_x < -10:
             self.position_x = WIDTH_GAME / 2
             self.position_y = HEIGHT_GAME / 2
             self.playerScore += 1
+            self.count = 0
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
         if self.position_x + self.dimension_x > WIDTH_GAME + 10:
             self.position_x = WIDTH_GAME / 2
             self.position_y = HEIGHT_GAME / 2
             self.botScore += 1
+            self.count = 0
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
 
@@ -133,22 +137,21 @@ class Game:
                     RUN = False
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
-                self.count += 0.2
-            if self.count > 13.799999999999982:
-                self.count = 13.799999999999983
-                self.count = 13.799999999999983
+                self.count += 1
+            if self.count > 13.99999999999999:
+                self.count = 0
             self.screen.blit(self.ball, (self.position_x, self.position_y))
             if keys[pygame.K_z]:
                 if not self.game_started:
                     self.velocity = [-2, -7 + random.randrange(-1, 1)]
-                    self.ball_speed = 0
+                    self.ball_speed = self.count
                 self.player_strike_left = True
                 self.player_strike_right = False
                 self.game_started = True
             if keys[pygame.K_x]:
                 if not self.game_started:
                     self.velocity = [2, -7 + random.randrange(-1, 1)]
-                    self.ball_speed = 0
+                    self.ball_speed = self.count
                 self.player_strike_left = False
                 self.player_strike_right = True
                 self.game_started = True
