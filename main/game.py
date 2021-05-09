@@ -4,6 +4,7 @@ from constants import *
 
 right = False
 left = False
+pygame.mixer.init()
 
 
 class Game:
@@ -24,6 +25,13 @@ class Game:
         self.by = -110
         self.x = 150
         self.y = 300
+
+        # loading bar
+        self.barPos = (30, 250)
+        self.barSize = (20, 200)
+        self.borderColor = (0, 0, 0)
+        self.barColor = RED
+        self.count = 0
 
         self.position_x = 0
         self.position_y = 0
@@ -49,6 +57,8 @@ class Game:
             self.x = 150
             self.y = 300
             self.playerScore += 1
+            pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
+            pygame.mixer.music.play()
         if self.position_y + self.dimension_y > HEIGHT_GAME:
             self.game_started = False
             self.bx = 0
@@ -56,14 +66,20 @@ class Game:
             self.x = 150
             self.y = 300
             self.playerScore -= 1
+            pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
+            pygame.mixer.music.play()
         if self.position_x - self.dimension_x < -10:
             self.position_x = WIDTH_GAME / 2
             self.position_y = HEIGHT_GAME / 2
             self.playerScore += 1
+            pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
+            pygame.mixer.music.play()
         if self.position_x + self.dimension_x > WIDTH_GAME + 10:
             self.position_x = WIDTH_GAME / 2
             self.position_y = HEIGHT_GAME / 2
             self.botScore += 1
+            pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
+            pygame.mixer.music.play()
 
         self.position_x += self.velocity[0]
         self.position_y += self.velocity[1]
@@ -81,7 +97,7 @@ class Game:
         self.collision_of_ball()
 
     def collision_of_ball(self):
-        # for player
+
         ball_center_x = self.position_x + HALF_BALL_SPRITE
         ball_center_y = self.position_y + HALF_BALL_SPRITE
 
@@ -89,6 +105,8 @@ class Game:
                 ball_center_x - HALF_BALL_SPRITE < self.x + HALF_IMAGE_PLAYER_SPRITE_X + HALF_PLAYER_SPRITE and \
                 ball_center_y - HALF_BALL_SPRITE < self.y + HALF_IMAGE_PLAYER_SPRITE_Y + HALF_PLAYER_SPRITE and \
                 ball_center_y + HALF_BALL_SPRITE > self.y + HALF_IMAGE_PLAYER_SPRITE_Y - HALF_PLAYER_SPRITE:
+            pygame.mixer.music.load('3dm_bik_ball.wav')
+            pygame.mixer.music.play()
             if self.player_strike_left:
                 self.velocity = [-2 - random.randrange(0, int(self.ball_speed / 3) + 1),
                                  -7 + random.randrange(-1, 1) - self.ball_speed]
@@ -101,6 +119,8 @@ class Game:
                 ball_center_x - HALF_BALL_SPRITE < self.bx + HALF_IMAGE_BOT_SPRITE_X + HALF_BOT_SPRITE and \
                 ball_center_y - HALF_BALL_SPRITE < self.by + HALF_IMAGE_BOT_SPRITE_Y + HALF_BOT_SPRITE and \
                 ball_center_y + HALF_BALL_SPRITE > self.by + HALF_IMAGE_BOT_SPRITE_Y - HALF_BOT_SPRITE:
+            pygame.mixer.music.load('3dm_bik_ball.wav')
+            pygame.mixer.music.play()
             self.ball_speed += 1
             self.velocity[1] *= -1
 
@@ -113,6 +133,11 @@ class Game:
                 if event.type == pygame.QUIT:
                     RUN = False
             keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                self.count += 0.2
+            if self.count > 13.799999999999982:
+                self.count = 13.799999999999983
+                self.count = 13.799999999999983
             self.screen.blit(self.ball, (self.position_x, self.position_y))
             if keys[pygame.K_z]:
                 if not self.game_started:
@@ -121,8 +146,6 @@ class Game:
                 self.player_strike_left = True
                 self.player_strike_right = False
                 self.game_started = True
-                self.player_profile = pygame.image.load("player_left.PNG")
-                self.screen.blit(self.player_profile, (self.x, self.y))
             if keys[pygame.K_x]:
                 if not self.game_started:
                     self.velocity = [2, -7 + random.randrange(-1, 1)]
@@ -153,6 +176,14 @@ class Game:
             self.update()
             self.draw()
 
+    def DrawBar(self, pos, size, borderC, barC, progress):
+
+        pygame.draw.rect(self.screen, borderC, (*pos, *size), 1)
+        innerPos = (pos[0] + 3, pos[1] + 3)
+        innerSize = ((size[0] - 6), (size[0] - 6) * progress)
+        print(progress)
+        pygame.draw.rect(self.screen, barC, (*innerPos, *innerSize))
+
     def draw(self):
         self.line.append(pygame.Rect(100, 50, 5, 400))
         self.line.append(pygame.Rect(400, 50, 5, 400))
@@ -173,7 +204,7 @@ class Game:
         pygame.draw.rect(self.screen, (255, 255, 255), self.line[7])
         pygame.draw.rect(self.screen, (255, 255, 255), self.line[8])
         pygame.draw.rect(self.screen, BLACK, self.fillet)
-
+        self.DrawBar(self.barPos, self.barSize, self.borderColor, self.barColor, self.count)
         self.screen.blit(self.player_profile, (self.x, self.y))
         self.screen.blit(self.bot, (self.bx, self.by))
         if self.game_started:
