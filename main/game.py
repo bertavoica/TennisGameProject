@@ -47,7 +47,7 @@ class Game:
 
     def update(self):
         if not self.game_started:
-            self.position_x = self.x + 175
+            self.position_x = self.x + 174
             self.position_y = self.y + 147 - 50
             return
         if self.position_y - self.dimension_y < -10:
