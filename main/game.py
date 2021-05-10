@@ -46,6 +46,18 @@ class Game:
         pygame.display.set_caption("Start game!")
         pygame.draw.rect(self.screen, (0, 255, 0), (POINT_X, POINT_Y, WIDTH_GAME, HEIGHT_GAME))
 
+    def increase_player_score(self):
+        if self.playerScore == 30:
+            self.playerScore += 10
+        else:
+            self.playerScore += 15
+
+    def increase_bot_score(self):
+        if self.botScore == 30:
+            self.botScore += 10
+        else:
+            self.botScore += 15
+
     def update(self):
         if not self.game_started:
             self.position_x = self.x + 175
@@ -57,7 +69,7 @@ class Game:
             self.by = -110
             self.x = 150
             self.y = 300
-            self.playerScore += 1
+            self.increase_player_score()
             self.count = 0
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
@@ -67,7 +79,7 @@ class Game:
             self.by = -110
             self.x = 150
             self.y = 300
-            self.botScore += 1
+            self.increase_bot_score()
             self.count = 0
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
@@ -78,9 +90,9 @@ class Game:
             self.x = 150
             self.y = 300
             if self.velocity[1] < 0:
-                self.botScore += 1
+                self.increase_bot_score()
             else:
-                self.playerScore += 1
+                self.increase_player_score()
             self.count = 0
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
@@ -91,10 +103,11 @@ class Game:
             self.x = 150
             self.y = 300
             if self.velocity[1] < 0:
-                self.botScore += 1
+                self.increase_bot_score()
             else:
-                self.playerScore += 1
+                self.increase_player_score()
             self.count = 0
+
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
 
@@ -161,6 +174,10 @@ class Game:
                 self.player_strike_left = True
                 self.player_strike_right = False
                 self.game_started = True
+                # reset score when one of the players won
+                if self.playerScore == 40 or self.botScore == 40:
+                    self.playerScore = 0
+                    self.botScore = 0
             if keys[pygame.K_x]:
                 if not self.game_started:
                     self.velocity = [2, -7 + random.randrange(-1, 1)]
@@ -168,6 +185,9 @@ class Game:
                 self.player_strike_left = False
                 self.player_strike_right = True
                 self.game_started = True
+                if self.playerScore == 40 or self.botScore == 40:
+                    self.playerScore = 0
+                    self.botScore = 0
                 self.player_profile = pygame.image.load("player_right.PNG")
                 self.screen.blit(self.player_profile, (self.x, self.y))
             if keys[pygame.K_LEFT] and self.position_x > VELOCITY:
@@ -226,6 +246,14 @@ class Game:
         self.screen.blit(self.score_text_player, (10, 500))
         self.score_text_bot = self.my_font.render("Bot Score = " + str(self.botScore), True, (0, 0, 0))
         self.screen.blit(self.score_text_bot, (10, 540))
+
+        if self.playerScore == 40:
+            self.score_text_player_end = self.my_font.render("Winner: Player!", True, (0, 0, 0))
+            self.screen.blit(self.score_text_player_end, (450, 200))
+        if self.botScore == 40:
+            self.score_text_player_end = self.my_font.render("Winner: Bot!", True, (0, 0, 0))
+            self.screen.blit(self.score_text_player_end, (450, 200))
+
         if self.game_started:
             self.screen.blit(self.ball, (self.position_x, self.position_y))
         pygame.display.update()
