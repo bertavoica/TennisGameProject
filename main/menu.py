@@ -30,6 +30,7 @@ class Menu:
         self.font = py.font.Font(None, 32)
         self.text = ''
         self.active = False
+        self.done = False
         self.font_title = pygame.font.SysFont(None, 65)
         self.txt_surface = self.font.render(self.text, True, BLACK)
         self.width = max(200, self.txt_surface.get_width() + 10)
@@ -38,7 +39,7 @@ class Menu:
         self.text_title = self.font_title.render("Tennis Game!", True, BLACK)
         self.clock = pygame.time.Clock()
         self.background = pygame.image.load(
-            r'C:\Users\HP\Desktop\proiect_python\TennisGameProject\main\background.png')
+            r'C:\Users\berta\PycharmProjects\pythonProject\TennisGameProjectSecondTry\main\background.png')
         self.fps_cap = 30
         self.input_box = py.Rect(10, 30, 100, 100)
         self.color_inactive = WHITE
@@ -60,11 +61,9 @@ class Menu:
             onClick=quit_the_game
         )
 
-
     def start_menu(self):
+        self.draw()
         pygame.display.set_caption('PyGame Tennis Game!')
-        py.draw.rect(self.screen, self.color, self.input_box, 2)
-
 
     def run_menu(self):
         global RUNNING, GO_TO_GAME
@@ -97,6 +96,7 @@ class Menu:
                         return FIRST_SCENE
                     elif event.key == self.button_1.function():
                         return SECOND_SCENE
+
                 self.txt_surface = self.font.render(self.text, True, self.color)
 
                 self.button_1.listen(events)
@@ -116,11 +116,7 @@ class Menu:
         self.button_2.draw()
         self.text = ''
         self.screen.blit(self.text_title, self.text_title.get_rect(center=self.screen.get_rect().center))
-        self.screen.blit(self.text_intro, self.text_intro.get_rect(center=(100, 20)))
-        self.width = max(200, self.txt_surface.get_width() + 10)
-        self.input_box.w = WIDTH_MENU / 1.5
-        self.screen.blit(self.txt_surface, (self.input_box.x + 5, self.input_box.y + 5))
-        py.draw.rect(self.screen, self.color, self.input_box, 2)
+
         pygame.display.update()
 
         # solved flickering by removing the flip function and add it to the bottom
@@ -139,7 +135,6 @@ def main():
             menu_object.start_menu()
             scene = menu_object.run_menu()
         elif scene == SECOND_SCENE:
-            print("ccc")
             game_object.start_game()
             game_object.run()
 

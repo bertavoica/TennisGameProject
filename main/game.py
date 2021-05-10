@@ -40,6 +40,7 @@ class Game:
         self.player_profile = pygame.image.load("player_profile.PNG")
         self.bot = pygame.image.load("bot2.png")
         self.ball = pygame.image.load("ball.png")
+        self.my_font = pygame.font.SysFont(None, 40)
 
     def start_game(self):
         pygame.display.set_caption("Start game!")
@@ -66,21 +67,33 @@ class Game:
             self.by = -110
             self.x = 150
             self.y = 300
-            self.playerScore -= 1
+            self.botScore += 1
             self.count = 0
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
         if self.position_x - self.dimension_x < -10:
-            self.position_x = WIDTH_GAME / 2
-            self.position_y = HEIGHT_GAME / 2
-            self.playerScore += 1
+            self.game_started = False
+            self.bx = 0
+            self.by = -110
+            self.x = 150
+            self.y = 300
+            if self.velocity[1] < 0:
+                self.botScore += 1
+            else:
+                self.playerScore += 1
             self.count = 0
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
         if self.position_x + self.dimension_x > WIDTH_GAME + 10:
-            self.position_x = WIDTH_GAME / 2
-            self.position_y = HEIGHT_GAME / 2
-            self.botScore += 1
+            self.game_started = False
+            self.bx = 0
+            self.by = -110
+            self.x = 150
+            self.y = 300
+            if self.velocity[1] < 0:
+                self.botScore += 1
+            else:
+                self.playerScore += 1
             self.count = 0
             pygame.mixer.music.load('mixkit-audience-light-applause-354.wav')
             pygame.mixer.music.play()
@@ -93,7 +106,7 @@ class Game:
             self.bx += BOT_VELOCITY
         if self.position_x < self.bx + 175:
             self.bx -= BOT_VELOCITY
-
+        print(self.playerScore)
         self.collision_detection()
 
     def collision_detection(self):
@@ -209,6 +222,10 @@ class Game:
         self.DrawBar(self.barPos, self.barSize, self.borderColor, self.barColor, self.count)
         self.screen.blit(self.player_profile, (self.x, self.y))
         self.screen.blit(self.bot, (self.bx, self.by))
+        self.score_text_player = self.my_font.render("Player Score = " + str(self.playerScore), True, (0, 0, 0))
+        self.screen.blit(self.score_text_player, (10, 500))
+        self.score_text_bot = self.my_font.render("Bot Score = " + str(self.botScore), True, (0, 0, 0))
+        self.screen.blit(self.score_text_bot, (10, 540))
         if self.game_started:
             self.screen.blit(self.ball, (self.position_x, self.position_y))
         pygame.display.update()
