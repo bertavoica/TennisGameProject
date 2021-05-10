@@ -28,24 +28,12 @@ class Menu:
     def __init__(self, screen):
         self.screen = screen
         self.font = py.font.Font(None, 32)
-        self.text = ''
-        self.active = False
-        self.done = False
         self.font_title = pygame.font.SysFont(None, 65)
-        self.txt_surface = self.font.render(self.text, True, BLACK)
-        self.width = max(200, self.txt_surface.get_width() + 10)
-        self.font_intro = pygame.font.SysFont(None, 30)
-        self.text_intro = self.font_intro.render("Enter your name:", True, BLACK)
         self.text_title = self.font_title.render("Tennis Game!", True, BLACK)
         self.clock = pygame.time.Clock()
         self.background = pygame.image.load(
             r'C:\Users\berta\PycharmProjects\pythonProject\TennisGameProjectSecondTry\main\background.png')
         self.fps_cap = 30
-        self.input_box = py.Rect(10, 30, 100, 100)
-        self.color_inactive = WHITE
-        self.color_active = RED
-        self.color = self.color_inactive
-        self.user_list = []
         self.button_1 = pw.Button(
             self.screen, WIDTH_MENU / 2 - 270, 500, 100, 100, text='Start',
             fontSize=30, margin=20,
@@ -78,26 +66,11 @@ class Menu:
                 if event.type == pygame.QUIT:
                     RUNNING = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.input_box.collidepoint(event.pos):
-                        self.active = True
-                    else:
-                        self.active = False
-                    self.color = self.color_active if self.active else self.color_inactive
-                if event.type == pygame.KEYDOWN:
-                    if self.active:
-                        if event.key == py.K_RETURN:
-                            print(self.text)
-                            self.text = ''
-                        elif event.key == py.K_BACKSPACE:
-                            self.text = self.text[:-1]
-                        else:
-                            self.text += event.unicode
-                    if event.key == pygame.K_UP:
-                        return FIRST_SCENE
-                    elif event.key == self.button_1.function():
-                        return SECOND_SCENE
-
-                self.txt_surface = self.font.render(self.text, True, self.color)
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_UP:
+                            return FIRST_SCENE
+                        elif event.key == self.button_1.function():
+                            return SECOND_SCENE
 
                 self.button_1.listen(events)
                 self.button_2.listen(events)
@@ -111,15 +84,12 @@ class Menu:
 
     def draw(self):
         global GO_TO_GAME
-        self.input_box.w = self.width
         self.button_1.draw()
         self.button_2.draw()
-        self.text = ''
         self.screen.blit(self.text_title, self.text_title.get_rect(center=self.screen.get_rect().center))
 
         pygame.display.update()
 
-        # solved flickering by removing the flip function and add it to the bottom
         pygame.display.flip()
 
 
